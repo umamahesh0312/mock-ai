@@ -4,9 +4,10 @@ import Image from "next/image";
 import {getRandomInterviewCover} from "@/lib/utils";
 import Link from "next/link";
 import DisplayTechicons from "@/components/DisplayTechicons";
+import {getFeedbackByInterviewId} from "@/lib/actions/general.action";
 
-const InterviewCard = ({interviewId,userId,role,type,techstack,createdAt}:InterviewCardProps) => {
-    const feedback=null as Feedback |null;
+const InterviewCard = async({id,userId,role,type,techstack,createdAt}:InterviewCardProps) => {
+    const feedback=userId && id ? await getFeedbackByInterviewId({interviewId:id,userId}) : null;
     const normalizedType=/mix/gi.test(type)?'Mixed':type;
     const formattedDate=dayjs(feedback?.createdAt||createdAt||Date.now()).format('MMM DD, YYYY');
     return (
@@ -28,19 +29,19 @@ const InterviewCard = ({interviewId,userId,role,type,techstack,createdAt}:Interv
                         </div>
                         <div className="flex felx-row gap-2 items-center">
                             <Image src="/star.svg" alt="star" width={22} height={22} />
-                            <p>{feedback?.totascore||'---'}/100</p>
+                            <p>{feedback?.totalScore ||'---'}/100</p>
 
                         </div>
 
                     </div>
                     <p className="line-clamp-2 mt-5">
-                        {feedback?.finalAssesment||"You haven’t taken the interview yet—give it a try and boost your skills!"}
+                        {feedback?.finalAssessment ||"You haven’t taken the interview yet—give it a try and boost your skills!"}
                     </p>
                 </div>
                 <div className="flex flex-row justify-between">
                     <DisplayTechicons techStack={techstack}/>
                     <button className="btn-primary">
-                        <Link  href={feedback?`/interview/${interviewId}/feedback`:`/interview/${interviewId}`}>
+                        <Link  href={feedback?`/interview/${id}/feedback`:`/interview/${id}`}>
                             {feedback? 'check Feedback':'view Interview'}
                         </Link>
                     </button>
