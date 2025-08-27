@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import Image from "next/image";
 import {getRandomInterviewCover} from "@/lib/utils";
 import Link from "next/link";
-import DisplayTechicons from "@/components/DisplayTechicons";
+import DisplayTechicons from "@/components/DisplayTechIcons";
 import {getFeedbackByInterviewId} from "@/lib/actions/general.action";
 
 const InterviewCard = async({id,userId,role,type,techstack,createdAt}:InterviewCardProps) => {
