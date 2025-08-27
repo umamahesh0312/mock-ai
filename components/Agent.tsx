@@ -21,7 +21,7 @@ interface SavedMessage{
 const Agent = ({userName,userId,type,interviewId,questions}: AgentProps) => {
     const router=useRouter();
     const [isSpeaking,setIsSpeaking]=React.useState(false);
-     const [Callstatus,setCallStatus]=React.useState<CallStatus>(CallStatus.INACTIVE);
+    const [Callstatus,setCallStatus]=React.useState<CallStatus>(CallStatus.INACTIVE);
     const [messages,setMessages]=React.useState<SavedMessage[]>([]);
 
     useEffect(()=> {
@@ -35,25 +35,25 @@ const Agent = ({userName,userId,type,interviewId,questions}: AgentProps) => {
         }
 
 
-          const onSpeechStart=()=>setIsSpeaking(true);
-          const onSpeechEnd=()=>setIsSpeaking(false);
-          const onError=(error:Error)=> console.log('Error', error);
-          vapi.on('call-start', onCallStart);
-          vapi.on('call-end', onCallEnd);
-          vapi.on('message', onMessage);
-          vapi.on('speech-start',onSpeechStart);
-          vapi.on('speech-end',onSpeechEnd);
-          vapi.on('error',onError);
-          return ()=>{
-              vapi.off('call-start', onCallStart);
-              vapi.off('call-end', onCallEnd);
-             vapi.off('message', onMessage);
-              vapi.off('speech-start',onSpeechStart);
-              vapi.off('speech-end',onSpeechEnd);
-              vapi.off('error',onError);
-          }
+        const onSpeechStart=()=>setIsSpeaking(true);
+        const onSpeechEnd=()=>setIsSpeaking(false);
+        const onError=(error:Error)=> console.log('Error', error);
+        vapi.on('call-start', onCallStart);
+        vapi.on('call-end', onCallEnd);
+        vapi.on('message', onMessage);
+        vapi.on('speech-start',onSpeechStart);
+        vapi.on('speech-end',onSpeechEnd);
+        vapi.on('error',onError);
+        return ()=>{
+            vapi.off('call-start', onCallStart);
+            vapi.off('call-end', onCallEnd);
+            vapi.off('message', onMessage);
+            vapi.off('speech-start',onSpeechStart);
+            vapi.off('speech-end',onSpeechEnd);
+            vapi.off('error',onError);
+        }
     },[])
-const handleGenerateFeedback= async(messages:SavedMessage[])=>{
+    const handleGenerateFeedback= async(messages:SavedMessage[])=>{
         console.log('Generate feedback here');
 
         //toDO:Create as server action
@@ -69,7 +69,7 @@ const handleGenerateFeedback= async(messages:SavedMessage[])=>{
             console.log('Error saving feedback');
             router.push('/');
         }
-}
+    }
     useEffect(()=>{
         if(Callstatus===CallStatus.FINISHED){
             if(type==='generate') {
@@ -109,31 +109,31 @@ const handleGenerateFeedback= async(messages:SavedMessage[])=>{
 
     const handleDisconnect=async()=>{
         setCallStatus(CallStatus.FINISHED);
-            vapi.stop();
+        vapi.stop();
     }
     const latestMessage=messages[messages.length-1]?.content;
     const isCallInactiveOrFinished=Callstatus===CallStatus.INACTIVE||Callstatus===CallStatus.FINISHED;
 
     return (
         <>
-        <div className="call-view">
-            <div className="card-interviewer">
-                <div className="avatar">
-                    <Image src="/ai-avatar.png" alt="vapi" width={65} height={65} className="object-cover" />
-                    {isSpeaking && <span className="animate-speak"/>}
+            <div className="call-view">
+                <div className="card-interviewer">
+                    <div className="avatar">
+                        <Image src="/ai-avatar.png" alt="vapi" width={65} height={65} className="object-cover" />
+                        {isSpeaking && <span className="animate-speak"/>}
+                    </div>
+                    <h3>Ai Interviewer</h3>
+
                 </div>
-                <h3>Ai Interviewer</h3>
+                <div className="card-border">
+                    <div className="card-content">
+                        <Image src="/user-avatar1.jpg" alt="user profile" width={540} height={520} className="rounded-full object-cover size-[120px]"/>
+                        <h3>{userName}</h3>
+                    </div>
+
+                </div>
 
             </div>
-            <div className="card-border">
-                <div className="card-content">
-                    <Image src="/user-avatar1.jpg" alt="user profile" width={540} height={520} className="rounded-full object-cover size-[120px]"/>
-                    <h3>{userName}</h3>
-                </div>
-
-            </div>
-
-        </div>
             {messages.length>0 && (
                 <div className="transcript-border">
                     <div className="transcript">
